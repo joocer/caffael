@@ -26,7 +26,7 @@ def _schedule_thread_runner(trigger):
             keep_running_trigger = False
         # don't form a tight loop, slow it down
         time.sleep(5)
-    print(f"Scheduler Thread {threading.current_thread().get_name()} has died")
+    print(f"Scheduler Thread {threading.current_thread().name} has died")
 
 
 class Scheduler(object):
