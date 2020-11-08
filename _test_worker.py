@@ -4,6 +4,7 @@
 from zipfile import ZipFile
 from urllib.request import urlopen
 from io import BytesIO
+import csv
 from caffael.worker.baseworker import BaseWorker
 
 def download_zip(url, savelocation, encoding='utf-8'):
@@ -11,7 +12,7 @@ def download_zip(url, savelocation, encoding='utf-8'):
     zipfile = ZipFile(BytesIO(resp.read()))
     for file in zipfile.namelist():
         for line in zipfile.open(file).readlines():
-            yield line
+            yield line.decode(encoding="utf8")
 
 
 class AcquireCWEWorker(BaseWorker):
@@ -22,12 +23,21 @@ class AcquireCWEWorker(BaseWorker):
         # the message is just a trigger, ignore the value of
         # message, and create a generator of the content of the
         # file we've downloaded
-        return download_zip(self.URL, r'data/raw/2000-cwe.csv', 'iso-8859-1')
+        data_reader = download_zip(self.URL, r'data/raw/2000-cwe.csv', 'iso-8859-1')
+
+        headers = next(data_reader).split(",")
+        for line in data_reader:
+            values = line.split(",")
+            zipped = dict(zip(headers, values))
+            yield zipped
 
     def pre_validate(self, payload):
-        for line in payload:
-            print(line)
-
+        for item in payload:
+            try:
+                return item.get('CWE-ID') != None
+            except:
+                return False
+            return True
 
     def process(self, payload):
         return payload

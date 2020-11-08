@@ -1,7 +1,5 @@
 """
 MQTT
-
-Creates 
 """
 
 import paho.mqtt.client as mqtt
@@ -11,18 +9,17 @@ import re
 from .config import get_config
 
 _queues = {}
+_mq = None
 
 DISPATCH_PREFIX = "caffael/dispatch/"
 REPLY_PREFIX = "caffael/reply/"
 
-def initialize_bus():
-    global get_bus
-    _mq = MQTT()
-    _mq.connect()
-    get_bus = lambda: _mq
+def get_bus():
+    global _mq
+    if not _mq:
+        _mq = MQTT()
+        _mq.connect()
     return _mq
-
-get_bus = initialize_bus
 
 def on_connect(client, userdata, flags, rc):
     client.subscribe(REPLY_PREFIX + '#')
@@ -32,15 +29,15 @@ def on_disconnect(client, userdata, rc):
         print ("Unexpected MQTT disconnection. Will auto-reconnect")
 
 def on_message(client, userdata, msg):
-    topic = msg.topic.lstrip(REPLY_PREFIX)
-    topic = REPLY_PREFIX + sanitize_topic(topic)
-    handler = _queues.get(topic, deadletter)
-    handler(topic, msg)
+    handler = _queues.get(msg.topic, deadletter)
+    handler(msg)
 
-def deadletter(topic, userdata):
-    raise Exception(f'Unhandled Message Topic: {topic}')
+def deadletter(msg):
+    print('available queus: ', _queues.keys())
+    #raise Exception(f'Unhandled Message Topic: {msg.topic}')
 
 def _queue_thread(client):
+    print("QUEUE LOOP")
     client.loop_forever()
 
 def sanitize_topic(topic):
@@ -69,7 +66,9 @@ class MQTT(object):
         self.client = client
 
     def add_listener(self, queue_name, callback):
+        print('>>', queue_name)
         topic = REPLY_PREFIX + sanitize_topic(queue_name)
+        print('>>', topic)
         _queues[topic] = callback
 
     def dispatch(self, queue_name, message):

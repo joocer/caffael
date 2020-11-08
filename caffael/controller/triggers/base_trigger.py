@@ -9,7 +9,7 @@ class BaseTrigger(abc.ABC):
     Base Trigger
     """
     def __init__(self, *args, **kwargs):
-
+        self.queue_name = self.__class__.__name__
         self.dispatcher = kwargs.get('dispatcher')
 
     def set_flow(self, flow):
@@ -27,11 +27,11 @@ class BaseTrigger(abc.ABC):
         """
         raise NotImplementedError("'engage' must be overridden")
 
-    def on_event(self, *args, **kwargs):
+    def on_event(self, payload):
         """
         DO NOT OVERRIDE THIS METHOD
         """
-        self.flow.execute(*args, **kwargs)
+        self.dispatcher.dispatch(payload)
 
 
 class BasePollingTrigger(BaseTrigger):
@@ -62,18 +62,15 @@ class BasePollingTrigger(BaseTrigger):
         raise NotImplementedError("'nudge' must be overridden")
 
     def engage(self, logging):
-        """
-        Built in
-        """
         self.logging = logging
         while self.max_runs != 0:
             self.nudge()
             time.sleep(self.polling_interval)
         raise StopTrigger('Max runs completed')
 
-    def on_event(self, *args, **kwargs):
+    def on_event(self, payload):
         """
         DO NOT OVERRIDE THIS METHOD
         """
         self.max_runs -= 1
-        self.dispatcher.emit(*args, **kwargs)
+        self.dispatcher.dispatch(payload)

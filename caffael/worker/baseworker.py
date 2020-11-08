@@ -5,20 +5,28 @@ class BaseWorker(object):
     def __init__(self):
         pass
 
-    def register(self):
-        pass
+    def acquire(self, message):
+        return message
 
-    def acquire(self):
-        pass
+    def pre_validate(self, payload):
+        return True
 
-    def validate(self):
-        pass
+    def process(self, payload):
+        return payload
 
-    def notify(self):
-        pass
+    def post_validate(self, payload):
+        return True
 
-    def start(self):
-        pass
+    def execute(self, message):
 
-    def deregister(self):
-        pass
+        payload = self.acquire(message)
+
+        if not self.pre_validate(payload):
+            raise Exception("not a valid payload")
+
+        payload = self.process(payload)
+
+        if not self.post_validate(payload):
+            raise Exception("not a valid payload")
+
+

@@ -1,17 +1,8 @@
 import threading
 import time
 from ..exceptions import StopTrigger
-#from ..http import api_initializer
 
 def _schedule_thread_runner(trigger, logging):
-    """
-    The wrapper around triggers, this is blocking so should be
-    run in a separate thread.
-
-    - Memory and Keyboard Errors are bubbled.
-    - StopTriggers gracefully
-    - Other errors are ignored
-    """
     keep_running_trigger = True
 
     while keep_running_trigger:
@@ -24,26 +15,14 @@ def _schedule_thread_runner(trigger, logging):
             raise MemoryError()
         except StopTrigger:
             keep_running_trigger = False
-        # don't form a tight loop, slow it down
         time.sleep(5)
-    print(f"Scheduler Thread {threading.current_thread().name} has died")
+    print(f"Scheduler Thread {threading.current_thread().name} has terminated")
 
 
 class Scheduler(object):
-    """
-    Scheduler allows multiple pipelines to be run.
 
-    Scheduled tasks must have a trigger, this trigger will acquire
-    the initializing data for the flow.
-    """
-    def __init__(self): #, enable_api=True, api_port=8000):
+    def __init__(self):
         self._threads = []
-        #if enable_api:
-        #    # the very start of the HTTP Interface
-        #    api_thread = threading.Thread(target=api_initializer, args=(self, api_port))
-        #    api_thread.daemon = True
-        #    api_thread.setName("cronicl:api_thread")
-        #    api_thread.start()
 
     def add_event(self, trigger):
         event_thread = threading.Thread(
