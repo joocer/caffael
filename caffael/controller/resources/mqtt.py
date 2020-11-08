@@ -1,5 +1,5 @@
 """
-MQTT
+Controller MQTT
 """
 
 import paho.mqtt.client as mqtt
@@ -11,8 +11,8 @@ from .config import get_config
 _queues = {}
 _mq = None
 
-DISPATCH_PREFIX = "caffael/dispatch/"
-REPLY_PREFIX = "caffael/reply/"
+DISPATCH_PREFIX = "$share/caffael/dispatch/"
+REPLY_PREFIX = "$share/caffael/reply/"
 
 def get_bus():
     global _mq

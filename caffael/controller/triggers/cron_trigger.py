@@ -1,3 +1,9 @@
+"""
+cron based trigger
+
+Partial implementation of scheduled trigger using cron notation.
+"""
+
 from .base_trigger import BaseTrigger
 import datetime
 from datetime import timedelta

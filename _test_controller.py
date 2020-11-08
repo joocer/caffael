@@ -7,18 +7,12 @@ import time
 scheduler = Scheduler()
 
 # create a trigger and dispatcher
-#interval_5s_dispatcher = Dispatcher(queue_name="interval_5s")
-#interval_5s_trigger = IntervalTrigger(polling_interval=1, 
-#    interval=5, 
-#    max_runs=1, 
-#    dispatcher=interval_5s_dispatcher)
-#scheduler.add_event(interval_5s_trigger)
-
-# create a second trigger and dispatcher
-cron_dispatcher = Dispatcher(queue_name="cron_trigger")
-cron_trigger = CronTrigger(schedule="39 * * * *", 
-    dispatcher=cron_dispatcher)
-scheduler.add_event(cron_trigger)
+interval_5s_dispatcher = Dispatcher(queue_name="interval_5s")
+interval_5s_trigger = IntervalTrigger(polling_interval=1, 
+    interval=5, 
+    max_runs=-1, # run forever
+    dispatcher=interval_5s_dispatcher)
+scheduler.add_event(interval_5s_trigger)
 
 scheduler.execute()
 
