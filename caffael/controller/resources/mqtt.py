@@ -25,8 +25,6 @@ def initialize_bus():
 get_bus = initialize_bus
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code " + str(rc))
-    print("Subscribing to", REPLY_PREFIX + '#')
     client.subscribe(REPLY_PREFIX + '#')
 
 def on_disconnect(client, userdata, rc):
@@ -34,14 +32,12 @@ def on_disconnect(client, userdata, rc):
         print ("Unexpected MQTT disconnection. Will auto-reconnect")
 
 def on_message(client, userdata, msg):
-    print('recieved message on ', msg.topic)
     topic = msg.topic.lstrip(REPLY_PREFIX)
     topic = REPLY_PREFIX + sanitize_topic(topic)
     handler = _queues.get(topic, deadletter)
     handler(topic, msg)
 
 def deadletter(topic, userdata):
-    print(_queues)
     raise Exception(f'Unhandled Message Topic: {topic}')
 
 def _queue_thread(client):
