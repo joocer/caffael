@@ -9,7 +9,7 @@ class BaseTrigger(abc.ABC):
     Base Trigger
     """
     def __init__(self, *args, **kwargs):
-        print('kwargs', kwargs)
+
         self.dispatcher = kwargs.get('dispatcher')
 
     def set_flow(self, flow):
@@ -19,7 +19,7 @@ class BaseTrigger(abc.ABC):
         self.flow = flow
 
     @abc.abstractmethod
-    def engage(self, flow):
+    def engage(self, flow, logging):
         """
         'engage' is called when a trigger is loaded.
         This should start any listening activities - like 
@@ -61,10 +61,11 @@ class BasePollingTrigger(BaseTrigger):
         """
         raise NotImplementedError("'nudge' must be overridden")
 
-    def engage(self):
+    def engage(self, logging):
         """
         Built in
         """
+        self.logging = logging
         while self.max_runs != 0:
             self.nudge()
             time.sleep(self.polling_interval)

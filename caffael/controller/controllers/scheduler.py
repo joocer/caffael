@@ -3,7 +3,7 @@ import time
 from ..exceptions import StopTrigger
 #from ..http import api_initializer
 
-def _schedule_thread_runner(trigger):
+def _schedule_thread_runner(trigger, logging):
     """
     The wrapper around triggers, this is blocking so should be
     run in a separate thread.
@@ -17,7 +17,7 @@ def _schedule_thread_runner(trigger):
     while keep_running_trigger:
         try:
             print('engage the trigger')
-            trigger.engage()
+            trigger.engage(logging)
         except KeyboardInterrupt:
             raise KeyboardInterrupt()
         except MemoryError:
@@ -47,7 +47,7 @@ class Scheduler(object):
 
     def add_event(self, trigger):
         event_thread = threading.Thread(
-            target=_schedule_thread_runner, args=(trigger,)
+            target=_schedule_thread_runner, args=(trigger, self.logging)
         )
         event_thread.daemon = True
         event_thread.setName(F"scheduler:{trigger.__class__.__name__}")
@@ -64,3 +64,11 @@ class Scheduler(object):
         Are any thread still running
         """
         return any([t.is_alive() for t in self._threads])
+
+    def logging(self, **kwargs):
+        print("logging: ", kwargs)
+
+    def read_sensors(self):
+        readings = {}
+        readings['event_handlers'] = [t.read_sensors() for t in self._threads if t.is_alive()]
+        return readings

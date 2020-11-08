@@ -25,10 +25,9 @@ class IntervalTrigger(BasePollingTrigger):
             )
 
     def nudge(self):
-        print('nudge')
+        """
+        test if the condition to run has been met
+        """
         if self._timestamp + self.interval < datetime.datetime.now():
             self._timestamp = datetime.datetime.now()
             self.on_event(self._timestamp)
-            return True
-        return False
-

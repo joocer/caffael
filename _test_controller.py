@@ -1,15 +1,8 @@
-from caffael.controller import Scheduler, Dispatcher, MQTT
+from caffael.controller import Scheduler, Dispatcher
 from caffael.controller.triggers import IntervalTrigger
+from caffael.controller.resources import get_bus
 import time
-import yaml
 
-def read_config(config_file):
-    with open(config_file, 'r') as f:
-        yaml_config = yaml.load(f, Loader=yaml.BaseLoader)
-    return yaml_config
-
-config = read_config("caffael.yaml")
-mqtt = MQTT(config['mqtt'])
 
 scheduler = Scheduler()
 
