@@ -8,7 +8,8 @@ import time
 scheduler = Scheduler()
 
 # create a trigger and dispatcher
-dispatcher = PrintToScreenDispatcher()
+dispatcher = PrintToScreenDispatcher(label="test dispatcher")
+
 interval_5s_trigger = IntervalTrigger(polling_interval=1,
     interval=5,
     dispatcher=dispatcher)

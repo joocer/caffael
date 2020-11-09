@@ -4,6 +4,7 @@ Trigger Base Class
 import abc
 from ..exceptions import StopTrigger, MissingInformationError
 import time
+import datetime
 
 
 class BaseTrigger(abc.ABC):
@@ -12,15 +13,15 @@ class BaseTrigger(abc.ABC):
     """
     def __init__(self, *args, **kwargs):
         self.queue_name = self.__class__.__name__
+        self.label = kwargs.get('label')
         if 'dispatcher' not in kwargs:
             raise MissingInformationError("Triggers must have a 'dispatcher' assigned")
         self.dispatcher = kwargs.get('dispatcher')
 
-    def set_flow(self, flow):
-        """
-        Set the flow this trigger should feed data to
-        """
-        self.flow = flow
+    def __str__(self):
+        if self.label:
+            return f"{self.__class__.__name__} ({self.label})"
+        return f"{self.__class__.__name__}"
 
     @abc.abstractmethod
     def engage(self, flow, logging):
@@ -35,9 +36,11 @@ class BaseTrigger(abc.ABC):
         """
         DO NOT OVERRIDE THIS METHOD
         """
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        print("@@@@@@@@@@@@@@ LOGGING SHOULD GO HERE @@@@@@@@@@@@@@@@")
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+
+        print({"date": datetime.datetime.now().isoformat(),
+            "trigger": str(self),
+            "dispatcher": str(self.dispatcher)})
+
         self.dispatcher.on_event(payload)
 
 

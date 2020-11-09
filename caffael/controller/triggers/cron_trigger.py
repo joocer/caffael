@@ -9,6 +9,7 @@ import datetime
 from datetime import timedelta
 from ..util.cron import is_now
 import time
+from ..exceptions import MissingInformationError
 
 
 def next_event(s):
@@ -50,7 +51,13 @@ class CronTrigger(BaseTrigger):
     """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if "schedule" not in kwargs:
+            raise MissingInformationError("cron trigger requires 'schedule' parameter")
         self.schedule = kwargs['schedule']
+        if self.label:
+            self.label = self.label + " - " + self.schedule
+        else:
+            self.label = self.schedule
 
     def engage(self, logging):
         """

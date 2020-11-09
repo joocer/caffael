@@ -19,6 +19,10 @@ class IntervalTrigger(BasePollingTrigger):
             raise TypeError(
                 "Interval must be either a number of seconds or a timedelta"
             )
+        if self.label:
+            self.label = self.label + " - " + str(int(self.interval.total_seconds())) + "s"
+        else:
+            self.label = str(int(self.interval.total_seconds())) + "s"
 
     def nudge(self):
         """
