@@ -1,6 +1,8 @@
+"""
+Trigger Base Class
+"""
 import abc
 from ..exceptions import StopTrigger
-import datetime
 import time
 
 
@@ -22,16 +24,16 @@ class BaseTrigger(abc.ABC):
     def engage(self, flow, logging):
         """
         'engage' is called when a trigger is loaded.
-        This should start any listening activities - like 
-        subscribing to message queues. 
+        This should start any listening activities - like
+        subscribing to message queues.
         """
-        raise NotImplementedError("'engage' must be overridden")
+        raise NotImplementedError("Trigger function 'engage' must be overridden")
 
     def on_event(self, payload):
         """
         DO NOT OVERRIDE THIS METHOD
         """
-        self.dispatcher.dispatch(payload)
+        self.dispatcher.on_event(payload)
 
 
 class BasePollingTrigger(BaseTrigger):
@@ -42,7 +44,6 @@ class BasePollingTrigger(BaseTrigger):
     - max_runs: the number of times to execute the flow from this
                 trigger, -1 = run forever
     """
-
     def __init__(self, *args, **kwargs):
         """
         max runs < 0 = run until stopped
@@ -50,7 +51,6 @@ class BasePollingTrigger(BaseTrigger):
         super(BasePollingTrigger, self).__init__(*args, **kwargs)
         self.polling_interval = kwargs.get('polling_interval', 60)
         self.max_runs = kwargs.get('max_runs', -1)
-
 
     @abc.abstractmethod
     def nudge(self):
@@ -73,4 +73,4 @@ class BasePollingTrigger(BaseTrigger):
         DO NOT OVERRIDE THIS METHOD
         """
         self.max_runs -= 1
-        self.dispatcher.dispatch(payload)
+        self.dispatcher.on_event(payload)

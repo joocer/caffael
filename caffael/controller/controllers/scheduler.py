@@ -2,6 +2,7 @@ import threading
 import time
 from ..exceptions import StopTrigger
 
+
 def _schedule_thread_runner(trigger, logging):
     keep_running_trigger = True
 

@@ -1,5 +1,6 @@
-from caffael.controller import Scheduler, Dispatcher
-from caffael.controller.triggers import IntervalTrigger, CronTrigger
+from caffael.controller import Scheduler
+from caffael.controller.dispatchers import PrintToScreenDispatcher
+from caffael.controller.triggers import IntervalTrigger, CronTrigger, SimpleHTTPTrigger
 from caffael.controller.resources import get_bus
 import time
 
@@ -7,12 +8,15 @@ import time
 scheduler = Scheduler()
 
 # create a trigger and dispatcher
-interval_5s_dispatcher = Dispatcher(queue_name="interval_5s")
-interval_5s_trigger = IntervalTrigger(polling_interval=1, 
-    interval=5, 
+dispatcher = PrintToScreenDispatcher()
+interval_5s_trigger = IntervalTrigger(polling_interval=1,
+    interval=5,
     max_runs=-1, # run forever
-    dispatcher=interval_5s_dispatcher)
+    dispatcher=dispatcher)
 scheduler.add_event(interval_5s_trigger)
+
+http_trigger = SimpleHTTPTrigger(dispatcher=dispatcher)
+scheduler.add_event(http_trigger)
 
 scheduler.execute()
 
