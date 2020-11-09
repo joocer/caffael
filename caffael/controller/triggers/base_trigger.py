@@ -2,7 +2,7 @@
 Trigger Base Class
 """
 import abc
-from ..exceptions import StopTrigger
+from ..exceptions import StopTrigger, MissingInformationError
 import time
 
 
@@ -12,6 +12,8 @@ class BaseTrigger(abc.ABC):
     """
     def __init__(self, *args, **kwargs):
         self.queue_name = self.__class__.__name__
+        if 'dispatcher' not in kwargs:
+            raise MissingInformationError("Triggers must have a 'dispatcher' assigned")
         self.dispatcher = kwargs.get('dispatcher')
 
     def set_flow(self, flow):

@@ -1,1 +1,2 @@
-from .stoptrigger import StopTrigger
+from .stop_trigger import StopTrigger
+from .missing_information_error import MissingInformationError

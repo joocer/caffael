@@ -11,15 +11,13 @@ scheduler = Scheduler()
 dispatcher = PrintToScreenDispatcher()
 interval_5s_trigger = IntervalTrigger(polling_interval=1,
     interval=5,
-    max_runs=-1, # run forever
     dispatcher=dispatcher)
 scheduler.add_trigger(interval_5s_trigger)
 
 http_trigger = SimpleHTTPTrigger(dispatcher=dispatcher)
 scheduler.add_trigger(http_trigger)
 
-file_watch_trigger = FileWatchTrigger(filename="%Y.txt", 
-    max_runs=-1,
+file_watch_trigger = FileWatchTrigger(filename="%Y.txt",
     dispatcher=dispatcher)
 scheduler.add_trigger(file_watch_trigger)
 
