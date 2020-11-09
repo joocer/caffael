@@ -25,7 +25,7 @@ class Scheduler(object):
     def __init__(self):
         self._threads = []
 
-    def add_event(self, trigger):
+    def add_trigger(self, trigger):
         event_thread = threading.Thread(
             target=_schedule_thread_runner, args=(trigger, self.logging)
         )
