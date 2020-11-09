@@ -35,6 +35,9 @@ class BaseTrigger(abc.ABC):
         """
         DO NOT OVERRIDE THIS METHOD
         """
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        print("@@@@@@@@@@@@@@ LOGGING SHOULD GO HERE @@@@@@@@@@@@@@@@")
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         self.dispatcher.on_event(payload)
 
 
@@ -75,4 +78,4 @@ class BasePollingTrigger(BaseTrigger):
         DO NOT OVERRIDE THIS METHOD
         """
         self.max_runs -= 1
-        self.dispatcher.on_event(payload)
+        super().on_event(payload)
