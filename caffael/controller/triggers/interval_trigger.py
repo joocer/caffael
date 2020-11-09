@@ -1,7 +1,6 @@
 
 from .base_trigger import BasePollingTrigger
 import datetime
-import time
 
 
 class IntervalTrigger(BasePollingTrigger):
