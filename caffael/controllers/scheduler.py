@@ -16,6 +16,8 @@ def _schedule_thread_runner(trigger, logging):
             raise MemoryError()
         except StopTrigger:
             keep_running_trigger = False
+        except Exception as e:
+            print('EXCEPTION:' + e)   # TODO: log this error
         time.sleep(5)
     print(f"Scheduler Thread {threading.current_thread().name} has terminated")
 

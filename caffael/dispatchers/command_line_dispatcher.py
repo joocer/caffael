@@ -1,5 +1,6 @@
 from .base_dispatcher import BaseDispatcher
 import subprocess
+import warnings
 
 
 class CommandLineDispatcher(BaseDispatcher):
@@ -11,6 +12,7 @@ class CommandLineDispatcher(BaseDispatcher):
     => command payload
     """
     def __init__(self, command):
+        warnings.warn("CommandLineDispatcher is not safe for production systems.")
         self.command = command
 
     def on_event(self, payload):

@@ -70,7 +70,7 @@ class CronTrigger(BaseTrigger):
         """
         while True:
             if is_now(self.schedule):
-                self.on_event(str(datetime.datetime.now()))
+                self.on_event(str(datetime.datetime.now().isoformat()))
                 time.sleep(60)
             seconds = seconds_until_next_event(self.schedule)
             if seconds < 1:

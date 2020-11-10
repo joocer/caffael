@@ -1,7 +1,7 @@
-from caffael.controller import Scheduler
-from caffael.controller.dispatchers import PrintToScreenDispatcher
-from caffael.controller.triggers import IntervalTrigger, CronTrigger, SimpleHTTPTrigger, FileWatchTrigger
-from caffael.controller.resources import get_bus
+from caffael import Scheduler
+from caffael.dispatchers import PrintToScreenDispatcher
+from caffael.triggers import IntervalTrigger, CronTrigger, SimpleHTTPTrigger, FileWatchTrigger
+from caffael.resources import get_bus
 import time
 
 

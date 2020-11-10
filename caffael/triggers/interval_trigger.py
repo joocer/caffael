@@ -30,6 +30,6 @@ class IntervalTrigger(BasePollingTrigger):
         """
         if self._timestamp + self.interval < datetime.datetime.now():
             self._timestamp = datetime.datetime.now()
-            self.on_event(self._timestamp)
+            self.on_event(self._timestamp.isoformat())
             return True
         return False

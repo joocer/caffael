@@ -10,6 +10,7 @@ values passed via the querystring to the dispatcher.
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs
 from .base_trigger import BaseTrigger
+import warnings
 
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
@@ -34,6 +35,7 @@ class SimpleHTTPTrigger(BaseTrigger):
     """
 
     def __init__(self, *args, **kwargs):
+        warnings.warn("SimpleHTTPTrigger is not safe for production systems.")
         super().__init__(*args, **kwargs)
         self.port = kwargs.get('port', 9000)
 
