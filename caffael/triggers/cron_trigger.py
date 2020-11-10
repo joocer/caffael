@@ -8,8 +8,10 @@ from .base_trigger import BaseTrigger
 import datetime
 from datetime import timedelta
 from ..util.cron import is_now
-import time
 from ..exceptions import MissingInformationError
+import threading
+
+sleep = threading.Event().wait
 
 
 def next_event(s):
@@ -42,7 +44,7 @@ def next_event(s):
 
 def seconds_until_next_event(s):
     event = next_event(s)
-    return ((event - datetime.datetime.now()).total_seconds() // 1) + 1
+    return (event - datetime.datetime.now()).total_seconds() // 1
 
 
 class CronTrigger(BaseTrigger):
@@ -71,11 +73,11 @@ class CronTrigger(BaseTrigger):
         while True:
             if is_now(self.schedule):
                 self.on_event(str(datetime.datetime.now().isoformat()))
-                time.sleep(60)
+                sleep(60)
             seconds = seconds_until_next_event(self.schedule)
             if seconds < 1:
-                print(F"negative sleep, waiting {seconds} seconds")
-                time.sleep(-2)
+                print(F"negative sleep, waiting 10 seconds")
+                sleep(10)
             else:
                 print(F"sleeping for {seconds} seconds")
-                time.sleep(seconds)
+                sleep(seconds)

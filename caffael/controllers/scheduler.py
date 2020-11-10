@@ -54,3 +54,16 @@ class Scheduler(object):
         readings = {}
         readings['event_handlers'] = [t.read_sensors() for t in self._threads if t.is_alive()]
         return readings
+
+        """
+        triggers : {
+            type: classname
+            label: label
+            activated_count: mss
+            running_since: mmmm
+            current_state: sss
+            state_since: sss
+            dispatcher: sss
+        }
+
+        """

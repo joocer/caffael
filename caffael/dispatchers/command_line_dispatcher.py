@@ -11,14 +11,16 @@ class CommandLineDispatcher(BaseDispatcher):
     on_event(payload)
     => command payload
     """
-    def __init__(self, command):
+    def __init__(self, *args, **kwargs):
         warnings.warn("CommandLineDispatcher is not safe for production systems.")
-        self.command = command
+        super().__init__(*args, **kwargs)
+        self.args = args
+        self.kwargs = kwargs
 
     def on_event(self, payload):
-        my_command = self.command.copy()
-        if payload:
-            my_command.append(payload)
-        result = subprocess.run(my_command, stdout=subprocess.PIPE)
+        result = subprocess.run(*self.args, **self.kwargs, stdout=subprocess.PIPE)
         result = result.stdout.decode('utf8').rstrip('\n')
         self.on_completion(result)
+
+    def on_completion(self, value):
+        pass

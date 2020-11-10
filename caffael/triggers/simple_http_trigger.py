@@ -45,10 +45,6 @@ class SimpleHTTPTrigger(BaseTrigger):
         handler.event_handler = self.on_event
         httpd.serve_forever()
 
-    def on_event(self, payload):
-        print(payload)
-
-
 if __name__ == "__main__":
     s = SimpleHTTPTrigger()
     s.engage(None)
