@@ -17,6 +17,3 @@ class CommandLineDispatcher(BaseDispatcher):
         result = subprocess.run(*self.args, **self.kwargs, stdout=subprocess.PIPE)
         result = result.stdout.decode('utf8').rstrip('\n')
         self.on_completion(result)
-
-    def on_completion(self, value):
-        pass
