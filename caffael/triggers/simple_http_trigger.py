@@ -10,6 +10,8 @@ values passed via the querystring to the dispatcher.
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import parse_qs
 from .base_trigger import BaseTrigger
+from ..dispatchers import CommandLineDispatcher
+from ..exceptions import ToxicCombinationError
 import warnings
 
 
@@ -38,6 +40,9 @@ class SimpleHTTPTrigger(BaseTrigger):
         warnings.warn("SimpleHTTPTrigger is not safe for production systems.")
         super().__init__(*args, **kwargs)
         self.port = kwargs.get('port', 9000)
+
+        if isinstance(kwargs['dispatcher'], CommandLineDispatcher):
+            raise ToxicCombinationError('HTTP Trigger and CommandLine Dispatcher actively forbidden')
 
     def engage(self):
         handler = SimpleHTTPRequestHandler
