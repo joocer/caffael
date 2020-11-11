@@ -65,7 +65,7 @@ class BasePollingTrigger(BaseTrigger):
         """
         This must call on_event with the data to pass to the
         pipeline.
-        This method shouldn't return anything.
+        This method should return True if the nudge triggered.
         """
         raise NotImplementedError("'nudge' must be overridden")
 

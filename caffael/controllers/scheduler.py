@@ -63,10 +63,6 @@ class Scheduler(object):
         return any([t.is_alive() for t in self._threads])
 
     def read_sensors(self):
-        readings = {}
-        readings['event_handlers'] = [t.read_sensors() for t in self._threads if t.is_alive()]
-        return readings
-
         """
         TODO: build status information
         triggers : {
@@ -79,3 +75,6 @@ class Scheduler(object):
             dispatcher: sss
         }
         """
+        readings = {}
+        readings['event_handlers'] = [t.read_sensors() for t in self._threads if t.is_alive()]
+        return readings

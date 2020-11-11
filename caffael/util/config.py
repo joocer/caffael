@@ -5,7 +5,7 @@ _config = None
 
 def read_config(config_file):
     with open(config_file, 'r') as f:
-        yaml_config = yaml.safe_load(f, Loader=yaml.BaseLoader)
+        yaml_config = yaml.safe_load(f)
     print(yaml_config)
     return yaml_config
 
