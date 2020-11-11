@@ -21,4 +21,5 @@ class IntervalTrigger(BasePollingTrigger):
         test if the condition to run has been met
         """
         self.on_event(datetime.datetime.now().isoformat())
+        return True
 
