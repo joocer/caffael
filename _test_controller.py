@@ -1,29 +1,28 @@
 from caffael import Scheduler
 from caffael.dispatchers import PrintToScreenDispatcher
-from caffael.triggers import IntervalTrigger, CronTrigger, SimpleHTTPTrigger, FileWatchTrigger
-from caffael.resources import get_bus
+from caffael.triggers import IntervalTrigger, SimpleHTTPTrigger
 import time
 import datetime
 
 
 scheduler = Scheduler()
 
-# create a trigger and dispatcher
+# create a dispatcher, in this case it's the demo print dispatcher
 dispatcher = PrintToScreenDispatcher(label="test dispatcher")
 
-interval_5s_trigger = IntervalTrigger(interval=5,
-                                    dispatcher=dispatcher)
+# create a trigger, assign the dispatcher and add to the scheduler
+interval_5s_trigger = IntervalTrigger(interval=5, dispatcher=dispatcher)
 scheduler.add_trigger(interval_5s_trigger)
 
+# create another trigger, asign the same (or a different) dispatcher
+# and add to the scheduler
 http_trigger = SimpleHTTPTrigger(dispatcher=dispatcher)
 scheduler.add_trigger(http_trigger)
 
-file_watch_trigger = FileWatchTrigger(filename="%Y.txt",
-                                    dispatcher=dispatcher)
-scheduler.add_trigger(file_watch_trigger)
-
+# start the scheduler
 scheduler.execute()
 
+# the scheduler should run forever, print a heart-beat every 15 mins
 while scheduler.running():
     print('Scheduler Still Alive @ ', datetime.datetime.now().isoformat())
-    time.sleep(10)
+    time.sleep(900)
