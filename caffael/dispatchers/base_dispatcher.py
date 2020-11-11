@@ -13,6 +13,7 @@ class BaseDispatcher(abc.ABC):
         raise NotImplementedError("Dispatcher 'on_event' must be overriden.")
 
     def on_completion(self, *arg, **kwargs):
+        # on_completion should be called when the task is complete
         pass
 
     def __str__(self):
