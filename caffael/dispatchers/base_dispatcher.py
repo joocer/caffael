@@ -5,6 +5,8 @@ class BaseDispatcher(abc.ABC):
 
     def __init__(self, *args, **kwargs):
         self.label = kwargs.get('label')
+        self.args = args
+        self.kwargs = kwargs
 
     @abc.abstractmethod
     def on_event(self, *arg, **kwargs):

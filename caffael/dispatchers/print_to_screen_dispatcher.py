@@ -13,6 +13,7 @@ class PrintToScreenDispatcher(BaseDispatcher):
 
     def on_event(self, payload):
         print(str(payload))
+        self.on_completion(payload)
 
     def on_completion(self, value):
         pass

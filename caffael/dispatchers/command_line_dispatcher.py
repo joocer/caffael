@@ -12,8 +12,6 @@ class CommandLineDispatcher(BaseDispatcher):
     def __init__(self, *args, **kwargs):
         warnings.warn("CommandLineDispatcher is not safe for production systems.")
         super().__init__(*args, **kwargs)
-        self.args = args
-        self.kwargs = kwargs
 
     def on_event(self, payload):
         result = subprocess.run(*self.args, **self.kwargs, stdout=subprocess.PIPE)
