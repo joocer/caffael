@@ -39,7 +39,7 @@ class SimpleHTTPTrigger(BaseTrigger):
         super().__init__(*args, **kwargs)
         self.port = kwargs.get('port', 9000)
 
-    def engage(self, flow):
+    def engage(self):
         handler = SimpleHTTPRequestHandler
         httpd = HTTPServer(("localhost", self.port), handler)
         handler.event_handler = self.on_event

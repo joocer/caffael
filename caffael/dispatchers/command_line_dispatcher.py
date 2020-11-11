@@ -7,9 +7,7 @@ class CommandLineDispatcher(BaseDispatcher):
     """
     A simple dispatcher which executes the command line.
 
-    init([command])
-    on_event(payload)
-    => command payload
+    DO NOT USE IN PRODUCTION
     """
     def __init__(self, *args, **kwargs):
         warnings.warn("CommandLineDispatcher is not safe for production systems.")

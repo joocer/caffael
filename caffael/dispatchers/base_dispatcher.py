@@ -4,7 +4,7 @@ import abc
 class BaseDispatcher(abc.ABC):
 
     def __init__(self, *args, **kwargs):
-        self.label = kwargs.pop('label')
+        self.label = kwargs.get('label')
 
     @abc.abstractmethod
     def on_event(self, *arg, **kwargs):

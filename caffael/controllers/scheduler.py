@@ -3,13 +3,16 @@ import time
 from ..exceptions import StopTrigger
 
 
-def _schedule_thread_runner(trigger, logging):
-    keep_running_trigger = True
+def _schedule_thread_runner(trigger,
+                        restart_on_error=True,
+                        restart_delay_seconds=5):
 
+    # we always want to run at least once
+    keep_running_trigger = True
     while keep_running_trigger:
+        keep_running_trigger = restart_on_error
         try:
-            print('engage the trigger')
-            trigger.engage(logging)
+            trigger.engage()
         except KeyboardInterrupt:
             raise KeyboardInterrupt()
         except MemoryError:
@@ -17,22 +20,34 @@ def _schedule_thread_runner(trigger, logging):
         except StopTrigger:
             keep_running_trigger = False
         except Exception as e:
-            print('EXCEPTION:' + e)   # TODO: log this error
-        time.sleep(5)
+            print('EXCEPTION:', e)   # TODO: log this error
+        time.sleep(restart_delay_seconds)
     print(f"Scheduler Thread {threading.current_thread().name} has terminated")
 
 
 class Scheduler(object):
+    """
+    The Scheduler wraps a set of trigger/dispatch sets.
+
+    You can run these outside the Scheduler, however the scheduler
+    does some things for you:
+
+    - it's non-blocking, you can run the trigger whilst doing other
+      work
+    - it's multi-threaded, you can run multiple triggers
+    - it resumes failed triggers
+    - TODO: it will allow querying of states of triggers
+    """
 
     def __init__(self):
         self._threads = []
 
-    def add_trigger(self, trigger):
+    def add_trigger(self, trigger, restart_on_error=True, restart_delay_seconds=5):
         event_thread = threading.Thread(
-            target=_schedule_thread_runner, args=(trigger, self.logging)
+            target=_schedule_thread_runner, args=(trigger, restart_on_error, restart_delay_seconds)
         )
         event_thread.daemon = True
-        event_thread.setName(F"scheduler:{trigger.__class__.__name__}")
+        event_thread.setName(F"scheduler:{str(trigger)}")
         self._threads.append(event_thread)
 
     def execute(self):
@@ -43,12 +58,9 @@ class Scheduler(object):
 
     def running(self):
         """
-        Are any thread still running
+        Are any thread still running?
         """
         return any([t.is_alive() for t in self._threads])
-
-    def logging(self, **kwargs):
-        print("logging: ", kwargs)
 
     def read_sensors(self):
         readings = {}
@@ -56,6 +68,7 @@ class Scheduler(object):
         return readings
 
         """
+        TODO: build status information
         triggers : {
             type: classname
             label: label
@@ -65,5 +78,4 @@ class Scheduler(object):
             state_since: sss
             dispatcher: sss
         }
-
         """

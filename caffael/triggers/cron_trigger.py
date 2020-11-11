@@ -61,7 +61,7 @@ class CronTrigger(BaseTrigger):
         else:
             self.label = self.schedule
 
-    def engage(self, logging):
+    def engage(self):
         """
         Based on the main loop of cron:
 
